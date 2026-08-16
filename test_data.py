@@ -2,13 +2,13 @@ import random
 
 base_url = "https://automationexercise.com"
 
-# login
+# login page
 login_email = "testUser1111@email.com"
 login_password = "pass123"
-
-# signup - mandatory fields
 signup_name = "TestUser" + str(random.randint(1000, 9999))
 signup_email = "testUser" + str(random.randint(1000, 9999)) + "@email.com"
+
+# signup page - mandatory fields
 signup_password = "pass" + str(random.randint(1000, 9999))
 signup_first_name = "UserFirstName"
 signup_last_name = "UserLastName"
