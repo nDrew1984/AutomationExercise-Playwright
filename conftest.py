@@ -10,8 +10,8 @@ accept_cookies_button_selector = "button.fc-cta-consent"
 @pytest.fixture(autouse=True)
 def accept_cookies(page):
     page.goto(base_url + "/login")
-    try:
-        page.locator(accept_cookies_button_selector).click(timeout=3000)
-    except:
-        pass
+    page.add_locator_handler(
+        page.locator(accept_cookies_button_selector), 
+        lambda locator: locator.click()
+    )
     yield

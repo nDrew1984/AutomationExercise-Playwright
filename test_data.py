@@ -18,3 +18,6 @@ signup_state = "Test State"
 signup_city = "Test City"
 signup_zip_code = "ZC12345"
 signup_mobile_number = "+1234567890"
+
+# products page
+products_count = 4
