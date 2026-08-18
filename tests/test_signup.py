@@ -3,9 +3,6 @@ from pages.login_page import LoginPage
 from pages.signup_page import SignupPage
 from test_data import signup_name, signup_email, signup_password, signup_first_name, signup_last_name, signup_address, signup_Country, signup_state, signup_city, signup_zip_code, signup_mobile_number
 
-
-#run command: pytest tests/test_signup.py -v --headed
-
 # Testing page title
 def test_signup_page_opens(page: Page):
     login_page = LoginPage(page)

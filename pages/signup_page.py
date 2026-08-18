@@ -1,8 +1,6 @@
 from playwright.sync_api import Page
 from pages.base_page import BasePage
 
-#selectors, sytax: 'element[attribute="value"]', except id: element = #
-
 class SignupPage(BasePage):
     def __init__(self, page):
         super().__init__(page)

@@ -5,6 +5,7 @@ from pages.login_page import LoginPage
 from pages.cart_page import CartPage
 from test_data import base_url, login_email, login_password, products_count
 
+# Testing product page opens successfully
 def test_prducts_page_opens(page: Page):
     login_page = LoginPage(page)
     base_page = BasePage(page)
@@ -14,7 +15,8 @@ def test_prducts_page_opens(page: Page):
 
     assert "Products" in page.title()
 
-def test_checkout_page_opens(page: Page):
+# Testing cart page opens successfully
+def test_cart_page_opens(page: Page):
     base_page = BasePage(page)
     login_page = LoginPage(page)
     products_page = ProductsPage(page)
@@ -25,10 +27,11 @@ def test_checkout_page_opens(page: Page):
 
     products_page.add_multiple_to_cart(1)
     base_page.click_cart_button()
-    assert "Checkout" in page.title()
+    assert page.url == base_url + "/view_cart"
 
     cart_page.delete_all_products()
 
+# Add products to cart, and checking if they appear on the Cart page
 def test_add_to_cart(page: Page):
     base_page = BasePage(page)
     login_page = LoginPage(page)
@@ -43,6 +46,25 @@ def test_add_to_cart(page: Page):
 
     cart_list = cart_page.get_products_list()
     assert cart_list == products_list
+    cart_page.delete_all_products()
+
+# Testing checkout page opens successfully
+def test_checkout_page_opens(page: Page):
+    base_page = BasePage(page)
+    login_page = LoginPage(page)
+    products_page = ProductsPage(page)
+    cart_page = CartPage(page)
+
+    login_page.login(login_email, login_password)
+    base_page.click_products_button()
+
+    products_page.add_multiple_to_cart(1)
+    base_page.click_cart_button()
+    cart_page.click_proceed_to_checkout()
+
+    assert page.url == base_url + "/checkout"
+
+    base_page.click_cart_button()
     cart_page.delete_all_products()
 
 

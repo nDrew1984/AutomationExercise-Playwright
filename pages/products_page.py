@@ -1,27 +1,21 @@
 from playwright.sync_api import Page
 from pages.base_page import BasePage
-
 import random
-
-# Add to cart button selector: <a data-product-id="43" class="btn btn-default add-to-cart">
-# <a data-product-id="43" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
-# first buttons: '.productinfo a.add-to-cart'
-# second buttons: '.product-overlay a.add-to-cart'
-# Continue shopping: 'button.close-modal'
-
-#selectors, sytax: 'element[attribute="value"]', except id: element = #
 
 class ProductsPage(BasePage):
     def __init__(self, page):
         super().__init__(page)
-        self.first_add_to_cart_buttons = '.productinfo a.add-to-cart'
-        self.overlay_add_to_cart_buttons = '.product-overlay a.add-to-cart'
-        self.products_names = '.product-overlay p'
+        self.info_product_names = '.productinfo p'
+        self.info_prices = '.productinfo h2'
+        self.info_add_to_cart_buttons = '.productinfo a.add-to-cart'
+        self.overlay_products_names = '.product-overlay p'
+        self.overlay_prices = '.product-overlay h2'
+        self.overlay_add_to_cart_buttons = '.product-overlay a.add-to-cart'  
         self.continue_shopping = 'button.close-modal'
         
     def add_multiple_to_cart(self, count):
-        self.page.wait_for_selector(self.first_add_to_cart_buttons)
-        first_buttons = self.page.locator(self.first_add_to_cart_buttons).all()
+        self.page.wait_for_selector(self.info_add_to_cart_buttons)
+        first_buttons = self.page.locator(self.info_add_to_cart_buttons).all()
         total = len(first_buttons)
         actual_count = min(count, total)
         random_samples = random.sample(range(total), actual_count)
@@ -32,7 +26,7 @@ class ProductsPage(BasePage):
             first_buttons[i].scroll_into_view_if_needed()
             first_buttons[i].hover()
 
-            product_name = self.page.locator(self.products_names).nth(i).inner_text()
+            product_name = self.page.locator(self.overlay_products_names).nth(i).inner_text()
             added_products.append(product_name)
 
             self.page.locator(self.overlay_add_to_cart_buttons).nth(i).click()
