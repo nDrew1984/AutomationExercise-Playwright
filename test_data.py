@@ -1,6 +1,6 @@
 import random
 
-base_url = "https://automationexercise.com"
+base_url = "https://automationexercise.com/"
 
 # login page
 login_email = "testUser1111@email.com"
@@ -21,3 +21,11 @@ signup_mobile_number = "+1234567890"
 
 # products page
 products_count = 4
+
+# Payment
+name_on_card = "John Doe"
+card_number = "1234567890"
+cvc = "111"
+expiration_month = "01"
+expiration_year = "1000"
+

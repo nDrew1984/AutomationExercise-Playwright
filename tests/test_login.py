@@ -8,12 +8,12 @@ def test_login_page_opens(page: Page):
 def test_successful_login(page: Page):
     login_page = LoginPage(page)
     login_page.login(login_email, login_password)
-    assert page.url != base_url + "/login"
+    assert page.url != base_url + "login"
 
 def test_failed_login(page: Page):
     login_page = LoginPage(page)
     login_page.login("invalid@email.com", "invalidpassword")
-    assert page.url == base_url + "/login"
+    assert page.url == base_url + "login"
     assert page.get_by_text("Your email or password is incorrect!").is_visible()
 
 
