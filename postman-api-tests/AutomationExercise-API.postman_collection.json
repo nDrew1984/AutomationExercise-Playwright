@@ -1,0 +1,2800 @@
+{
+  "info": {
+    "_postman_id": "71af74b1-b55c-473c-8b0d-5ba16d99443d",
+    "name": "AutomationExercise API Tests",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "21384486"
+  },
+  "item": [
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "Product List",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response contains products array\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData.products).to.be.an('array');\r",
+                  "    pm.expect(jsonData.products.length).to.be.above(0);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Content-Type header exists\", function () {\r",
+                  "    pm.response.to.have.header(\"Content-Type\")\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Content-Type is application/json\", function () {\r",
+                  "    pm.response.to.have.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time is less than 2000ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Product object has required fields\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    var firstProduct = jsonData.products[0];\r",
+                  "    pm.expect(firstProduct).to.have.property(\"id\");\r",
+                  "    pm.expect(firstProduct).to.have.property(\"name\");\r",
+                  "    pm.expect(firstProduct).to.have.property(\"price\");\r",
+                  "    pm.expect(firstProduct).to.have.property(\"brand\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Id is a number\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData.products[0].id).to.be.a(\"number\")\r",
+                  "})\r",
+                  "\r",
+                  "pm.test(\"Name is a string\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData.products[0].name).to.be.a(\"string\")\r",
+                  "})\r",
+                  "\r",
+                  "var schema = {\r",
+                  "    \"type\": \"object\",\r",
+                  "    \"properties\": {\r",
+                  "        \"responseCode\": {\"type\": \"number\"},\r",
+                  "        \"products\": {\r",
+                  "            \"type\": \"array\",\r",
+                  "            \"items\": {\r",
+                  "                \"type\": \"object\",\r",
+                  "                \"required\": [\"id\", \"name\", \"price\", \"brand\"]\r",
+                  "            }\r",
+                  "        }\r",
+                  "    },\r",
+                  "    \"required\": [\"responseCode\", \"products\"]\r",
+                  "};\r",
+                  "\r",
+                  "pm.test(\"Response matches JSON schema\", function () {\r",
+                  "    pm.response.to.have.jsonSchema(schema);\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://automationexercise.com/api/productsList",
+              "protocol": "https",
+              "host": [
+                "automationexercise",
+                "com"
+              ],
+              "path": [
+                "api",
+                "productsList"
+              ]
+            },
+            "description": "Get product list"
+          },
+          "response": []
+        },
+        {
+          "name": "Search Product without parameter",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"HTTP status code is 400\", function () {\r",
+                  "    pm.response.to.have.status(400);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Body response code is 400\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData.responseCode).to.eql(400);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Error message mentions missing parameter\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData.message).to.include(\"parameter is missing\")\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "https://automationexercise.com/api/searchProduct",
+              "protocol": "https",
+              "host": [
+                "automationexercise",
+                "com"
+              ],
+              "path": [
+                "api",
+                "searchProduct"
+              ]
+            },
+            "description": "Search without parameter"
+          },
+          "response": []
+        },
+        {
+          "name": "Search existing Product",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"HTTP status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response contains at least one result\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData.products.length).to.be.above(0);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Body response code is 200\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData.responseCode).to.eql(200);\r",
+                  "});\r",
+                  "\r",
+                  "var schema = {\r",
+                  "    \"type\": \"object\",\r",
+                  "    \"properties\": {\r",
+                  "        \"responseCode\": {\"type\": \"number\"},\r",
+                  "        \"products\": {\r",
+                  "            \"type\": \"array\",\r",
+                  "            \"items\": {\r",
+                  "                \"type\": \"object\",\r",
+                  "                \"required\": [\"id\", \"name\", \"price\", \"brand\"]\r",
+                  "            }\r",
+                  "        }\r",
+                  "    },\r",
+                  "    \"required\": [\"responseCode\", \"products\"]\r",
+                  "};\r",
+                  "\r",
+                  "pm.test(\"Response matches JSON schema\", function () {\r",
+                  "    pm.response.to.have.jsonSchema(schema);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Body contains the searched string\", function () {\r",
+                  "    var searchItem = pm.request.body.urlencoded.get(\"search_product\").toLowerCase();\r",
+                  "    pm.expect(pm.response.text().toLowerCase()).to.include(searchItem);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Every product contains the searched string\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    var searchItem = pm.request.body.urlencoded.get(\"search_product\").toLowerCase();\r",
+                  "\r",
+                  "    jsonData.products.forEach(function (product) {\r",
+                  "        var matchesName = product.name.toLowerCase().includes(searchItem);\r",
+                  "        var matchesUsertype = product.category.usertype.usertype.toLowerCase().includes(searchItem);\r",
+                  "        var matchesCategory = product.category.category.toLowerCase().includes(searchItem);\r",
+                  "        pm.expect(matchesName || matchesUsertype || matchesCategory).to.be.true;\r",
+                  "    });\r",
+                  "});\r",
+                  "\r",
+                  "\r",
+                  "\r",
+                  "\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "search_product",
+                  "value": "BLUE",
+                  "type": "text",
+                  "uuid": "aeb7ce17-202a-456e-b568-646a3ce28498"
+                }
+              ]
+            },
+            "url": {
+              "raw": "https://automationexercise.com/api/searchProduct",
+              "protocol": "https",
+              "host": [
+                "automationexercise",
+                "com"
+              ],
+              "path": [
+                "api",
+                "searchProduct"
+              ]
+            },
+            "description": "Search for existing product"
+          },
+          "response": []
+        },
+        {
+          "name": "Search non-existing",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"HTTP status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response has responseCode and Products\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData).to.have.property('responseCode');\r",
+                  "    pm.expect(jsonData).to.have.property('products');\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Body response code is 200\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData.responseCode).to.eql(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response does not contain products\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData.products).to.eql([]);\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "search_product",
+                  "value": "nonExistingProduct",
+                  "type": "text",
+                  "uuid": "a3391c10-741c-4a57-915e-cf9bd46e5525"
+                }
+              ]
+            },
+            "url": {
+              "raw": "https://automationexercise.com/api/searchProduct",
+              "protocol": "https",
+              "host": [
+                "automationexercise",
+                "com"
+              ],
+              "path": [
+                "api",
+                "searchProduct"
+              ]
+            },
+            "description": "Search for non-existing product"
+          },
+          "response": []
+        },
+        {
+          "name": "Search empty string",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"HTTP status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response has responseCode and Products\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData).to.have.property('responseCode');\r",
+                  "    pm.expect(jsonData).to.have.property('products');\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Body response code is 200\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData.responseCode).to.eql(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response does not contain products\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData.products).to.eql([]);\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "search_product",
+                  "value": "\"\"",
+                  "type": "text",
+                  "uuid": "d3f7f9ce-3331-4c51-bba7-0993b6f7884d"
+                }
+              ]
+            },
+            "url": {
+              "raw": "https://automationexercise.com/api/searchProduct",
+              "protocol": "https",
+              "host": [
+                "automationexercise",
+                "com"
+              ],
+              "path": [
+                "api",
+                "searchProduct"
+              ]
+            },
+            "description": "Search sent with empty string parameter."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Brands",
+      "item": [
+        {
+          "name": "Brand List",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response contains Brands array\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData.brands).to.be.an('array');\r",
+                  "    pm.expect(jsonData.brands.length).to.be.above(0);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Content-Type header exists\", function () {\r",
+                  "    pm.response.to.have.header(\"Content-Type\")\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Content-Type is application/json\", function () {\r",
+                  "    pm.response.to.have.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time is less than 2000ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(2000);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Brand object has required fields\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    var firstBrand = jsonData.brands[0];\r",
+                  "    pm.expect(firstBrand).to.have.property(\"id\");\r",
+                  "    pm.expect(firstBrand).to.have.property(\"brand\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Id is a number\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData.brands[0].id).to.be.a(\"number\")\r",
+                  "})\r",
+                  "\r",
+                  "pm.test(\"Brand is a string\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData.brands[0].brand).to.be.a(\"string\")\r",
+                  "})\r",
+                  "\r",
+                  "var schema = {\r",
+                  "    \"type\": \"object\",\r",
+                  "    \"properties\": {\r",
+                  "        \"responseCode\": {\"type\": \"number\"},\r",
+                  "        \"brands\": {\r",
+                  "            \"type\": \"array\",\r",
+                  "            \"items\": {\r",
+                  "                \"type\": \"object\",\r",
+                  "                \"required\": [\"id\", \"brand\"]\r",
+                  "            }\r",
+                  "        }\r",
+                  "    },\r",
+                  "    \"required\": [\"responseCode\", \"brands\"]\r",
+                  "};\r",
+                  "\r",
+                  "pm.test(\"Response matches JSON schema\", function () {\r",
+                  "    pm.response.to.have.jsonSchema(schema);\r",
+                  "});\r",
+                  "\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://automationexercise.com/api/brandsList",
+              "protocol": "https",
+              "host": [
+                "automationexercise",
+                "com"
+              ],
+              "path": [
+                "api",
+                "brandsList"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Accounts",
+      "item": [
+        {
+          "name": "Create Account with every data",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"HTTP Status code is 201 (new user)\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "var schema = {\r",
+                  "    \"type\": \"object\",\r",
+                  "    \"properties\": {\r",
+                  "        \"responseCode\": {\"type\": \"number\"},\r",
+                  "        \"message\": {\"type\": \"string\"}\r",
+                  "    },\r",
+                  "    \"required\": [\"responseCode\", \"message\"]\r",
+                  "};\r",
+                  "\r",
+                  "pm.test(\"Response matches JSON schema\", function () {\r",
+                  "    pm.response.to.have.jsonSchema(schema);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Body response code is 201\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData.responseCode).to.eql(201);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Success message: User created\", function () {\r",
+                  "    pm.expect(pm.response.json().message).to.eql(\"User created!\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time is less than 1000ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Content-Type is application/json\", function () {\r",
+                  "    pm.response.to.have.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+                  "});\r",
+                  "\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "var timestamp = Date.now();\r",
+                  "var uniqueEmail = \"testUser\" + timestamp + \"@email.com\";\r",
+                  "\r",
+                  "// Created User data\r",
+                  "pm.collectionVariables.set(\"name\", \"TestName\");\r",
+                  "pm.collectionVariables.set(\"email\", uniqueEmail);\r",
+                  "pm.collectionVariables.set(\"password\", \"pass111\");\r",
+                  "pm.collectionVariables.set(\"title\", \"Mr\");\r",
+                  "pm.collectionVariables.set(\"birth_day\", \"11\");\r",
+                  "pm.collectionVariables.set(\"birth_month\", \"10\");\r",
+                  "pm.collectionVariables.set(\"birth_year\", \"1970\");\r",
+                  "pm.collectionVariables.set(\"firstname\", \"John\");\r",
+                  "pm.collectionVariables.set(\"lastname\", \"Doe\");\r",
+                  "pm.collectionVariables.set(\"company\", \"TestCompany ltd.\");\r",
+                  "pm.collectionVariables.set(\"address1\", \"testAddress1\");\r",
+                  "pm.collectionVariables.set(\"address2\", \"testAddress2\");\r",
+                  "pm.collectionVariables.set(\"country\", \"Canada\");\r",
+                  "pm.collectionVariables.set(\"state\", \"TestState\");\r",
+                  "pm.collectionVariables.set(\"city\", \"TestCity\");\r",
+                  "pm.collectionVariables.set(\"zipcode\", \"ZC 12345\");\r",
+                  "pm.collectionVariables.set(\"mobile_number\", \"+1234567890\");\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "name",
+                  "value": "{{name}}",
+                  "description": "required",
+                  "type": "text",
+                  "uuid": "31248ec2-fb52-4388-ae46-360e781fc3dd"
+                },
+                {
+                  "key": "email",
+                  "value": "{{email}}",
+                  "description": "required",
+                  "type": "text",
+                  "uuid": "7f3e6e2b-b57d-4148-9b46-51916da22237"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password}}",
+                  "description": "required",
+                  "type": "text",
+                  "uuid": "ab5d232b-b7ac-4ef6-b0cb-776acc7dbe55"
+                },
+                {
+                  "key": "title",
+                  "value": "{{title}}",
+                  "type": "text",
+                  "uuid": "d42549e9-f107-4f60-b160-3f6529a10af9"
+                },
+                {
+                  "key": "birth_date",
+                  "value": "{{birth_day}}",
+                  "type": "text",
+                  "uuid": "0797ed07-105c-4dff-bd08-438a9b52d07f"
+                },
+                {
+                  "key": "birth_month",
+                  "value": "{{birth_month}}",
+                  "type": "text",
+                  "uuid": "1ff738f5-cea4-4d00-aa13-0345c7bfa551"
+                },
+                {
+                  "key": "birth_year",
+                  "value": "{{birth_year}}",
+                  "type": "text",
+                  "uuid": "70e64dc4-4e92-4e63-b27d-640b99c226d4"
+                },
+                {
+                  "key": "firstname",
+                  "value": "{{firstname}}",
+                  "description": "required",
+                  "type": "text",
+                  "uuid": "ed8c77af-a829-4cc5-946b-a62748e4e501"
+                },
+                {
+                  "key": "lastname",
+                  "value": "{{lastname}}",
+                  "description": "required",
+                  "type": "text",
+                  "uuid": "71548f82-b0f4-4f48-b759-155e7e3fbc27"
+                },
+                {
+                  "key": "company",
+                  "value": "{{company}}",
+                  "type": "text",
+                  "uuid": "b0c05a92-860e-4df3-9731-9b48208ee20a"
+                },
+                {
+                  "key": "address1",
+                  "value": "{{address1}}",
+                  "description": "required",
+                  "type": "text",
+                  "uuid": "98f98ee8-a5f2-42cd-823b-2c40668b1d72"
+                },
+                {
+                  "key": "address2",
+                  "value": "{{address2}}",
+                  "type": "text",
+                  "uuid": "1521a07f-6a8e-4b30-9ff7-e390933056f3"
+                },
+                {
+                  "key": "country",
+                  "value": "{{country}}",
+                  "description": "required",
+                  "type": "text",
+                  "uuid": "3770545d-2cef-4dc2-ba90-1fb28fd559a8"
+                },
+                {
+                  "key": "state",
+                  "value": "{{state}}",
+                  "description": "required",
+                  "type": "text",
+                  "uuid": "70068fae-3796-43b4-9cc3-9e4c3d565600"
+                },
+                {
+                  "key": "city",
+                  "value": "{{city}}",
+                  "description": "required",
+                  "type": "text",
+                  "uuid": "61413249-c004-40b6-b468-1daee68061cc"
+                },
+                {
+                  "key": "zipcode",
+                  "value": "{{zipcode}}",
+                  "description": "required",
+                  "type": "text",
+                  "uuid": "28f2146b-41de-4677-aa67-86344034d2a2"
+                },
+                {
+                  "key": "mobile_number",
+                  "value": "{{mobile_number}}",
+                  "description": "required",
+                  "type": "text",
+                  "uuid": "fac9203a-fa2a-418a-bbf5-e9497fe406fa"
+                }
+              ]
+            },
+            "url": {
+              "raw": "https://automationexercise.com/api/createAccount",
+              "protocol": "https",
+              "host": [
+                "automationexercise",
+                "com"
+              ],
+              "path": [
+                "api",
+                "createAccount"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Account - missing name",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"HTTP Status code is 400\", function () {\r",
+                  "    pm.response.to.have.status(400);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Body response code is 400\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData.responseCode).to.eql(400);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Error message: missing parameter is mentioned\", function () {\r",
+                  "    pm.expect(pm.response.json().message)\r",
+                  "    .include(\"name parameter is missing\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time is less than 1000ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "name",
+                  "value": "{{name}}",
+                  "type": "text",
+                  "uuid": "31248ec2-fb52-4388-ae46-360e781fc3dd",
+                  "description": "required - DO NOT set it True in this test",
+                  "disabled": true
+                },
+                {
+                  "key": "email",
+                  "value": "{{email}}",
+                  "type": "text",
+                  "uuid": "7f3e6e2b-b57d-4148-9b46-51916da22237",
+                  "description": "required"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password}}",
+                  "type": "text",
+                  "uuid": "ab5d232b-b7ac-4ef6-b0cb-776acc7dbe55",
+                  "description": "required"
+                },
+                {
+                  "key": "title",
+                  "value": "{{title}}",
+                  "type": "text",
+                  "uuid": "d42549e9-f107-4f60-b160-3f6529a10af9",
+                  "disabled": true
+                },
+                {
+                  "key": "birth_date",
+                  "value": "{{birth_day}}",
+                  "type": "text",
+                  "uuid": "0797ed07-105c-4dff-bd08-438a9b52d07f",
+                  "disabled": true
+                },
+                {
+                  "key": "birth_month",
+                  "value": "{{birth_month}}",
+                  "type": "text",
+                  "uuid": "1ff738f5-cea4-4d00-aa13-0345c7bfa551",
+                  "disabled": true
+                },
+                {
+                  "key": "birth_year",
+                  "value": "{{birth_year}}",
+                  "type": "text",
+                  "uuid": "70e64dc4-4e92-4e63-b27d-640b99c226d4",
+                  "disabled": true
+                },
+                {
+                  "key": "firstname",
+                  "value": "{{firstname}}",
+                  "type": "text",
+                  "uuid": "ed8c77af-a829-4cc5-946b-a62748e4e501",
+                  "description": "required"
+                },
+                {
+                  "key": "lastname",
+                  "value": "{{lastname}}",
+                  "type": "text",
+                  "uuid": "71548f82-b0f4-4f48-b759-155e7e3fbc27",
+                  "description": "required"
+                },
+                {
+                  "key": "company",
+                  "value": "{{company}}",
+                  "type": "text",
+                  "uuid": "b0c05a92-860e-4df3-9731-9b48208ee20a",
+                  "disabled": true
+                },
+                {
+                  "key": "address1",
+                  "value": "{{address1}}",
+                  "type": "text",
+                  "uuid": "98f98ee8-a5f2-42cd-823b-2c40668b1d72",
+                  "description": "required"
+                },
+                {
+                  "key": "address2",
+                  "value": "{{address2}}",
+                  "type": "text",
+                  "uuid": "1521a07f-6a8e-4b30-9ff7-e390933056f3",
+                  "disabled": true
+                },
+                {
+                  "key": "country",
+                  "value": "{{country}}",
+                  "type": "text",
+                  "uuid": "3770545d-2cef-4dc2-ba90-1fb28fd559a8",
+                  "description": "required"
+                },
+                {
+                  "key": "state",
+                  "value": "{{state}}",
+                  "type": "text",
+                  "uuid": "70068fae-3796-43b4-9cc3-9e4c3d565600",
+                  "description": "required"
+                },
+                {
+                  "key": "city",
+                  "value": "{{city}}",
+                  "type": "text",
+                  "uuid": "61413249-c004-40b6-b468-1daee68061cc",
+                  "description": "required"
+                },
+                {
+                  "key": "zipcode",
+                  "value": "{{zipcode}}",
+                  "type": "text",
+                  "uuid": "28f2146b-41de-4677-aa67-86344034d2a2",
+                  "description": "required"
+                },
+                {
+                  "key": "mobile_number",
+                  "value": "{{mobile_number}}",
+                  "type": "text",
+                  "uuid": "fac9203a-fa2a-418a-bbf5-e9497fe406fa",
+                  "description": "required"
+                }
+              ]
+            },
+            "url": {
+              "raw": "https://automationexercise.com/api/createAccount",
+              "protocol": "https",
+              "host": [
+                "automationexercise",
+                "com"
+              ],
+              "path": [
+                "api",
+                "createAccount"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Account - missing email",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"HTTP Status code is 400\", function () {\r",
+                  "    pm.response.to.have.status(400);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Body response code is 400\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData.responseCode).to.eql(400);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Error message: missing parameter is mentioned\", function () {\r",
+                  "    pm.expect(pm.response.json().message)\r",
+                  "    .include(\"email parameter is missing\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time is less than 1000ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "name",
+                  "value": "{{name}}",
+                  "type": "text",
+                  "uuid": "31248ec2-fb52-4388-ae46-360e781fc3dd",
+                  "description": "required"
+                },
+                {
+                  "key": "email",
+                  "value": "{{email}}",
+                  "type": "text",
+                  "uuid": "7f3e6e2b-b57d-4148-9b46-51916da22237",
+                  "description": "required - DO NOT set it True in this test",
+                  "disabled": true
+                },
+                {
+                  "key": "password",
+                  "value": "{{password}}",
+                  "type": "text",
+                  "uuid": "ab5d232b-b7ac-4ef6-b0cb-776acc7dbe55",
+                  "description": "required"
+                },
+                {
+                  "key": "title",
+                  "value": "{{title}}",
+                  "type": "text",
+                  "uuid": "d42549e9-f107-4f60-b160-3f6529a10af9",
+                  "disabled": true
+                },
+                {
+                  "key": "birth_date",
+                  "value": "{{birth_day}}",
+                  "type": "text",
+                  "uuid": "0797ed07-105c-4dff-bd08-438a9b52d07f",
+                  "disabled": true
+                },
+                {
+                  "key": "birth_month",
+                  "value": "{{birth_month}}",
+                  "type": "text",
+                  "uuid": "1ff738f5-cea4-4d00-aa13-0345c7bfa551",
+                  "disabled": true
+                },
+                {
+                  "key": "birth_year",
+                  "value": "{{birth_year}}",
+                  "type": "text",
+                  "uuid": "70e64dc4-4e92-4e63-b27d-640b99c226d4",
+                  "disabled": true
+                },
+                {
+                  "key": "firstname",
+                  "value": "{{firstname}}",
+                  "type": "text",
+                  "uuid": "ed8c77af-a829-4cc5-946b-a62748e4e501",
+                  "description": "required"
+                },
+                {
+                  "key": "lastname",
+                  "value": "{{lastname}}",
+                  "type": "text",
+                  "uuid": "71548f82-b0f4-4f48-b759-155e7e3fbc27",
+                  "description": "required"
+                },
+                {
+                  "key": "company",
+                  "value": "{{company}}",
+                  "type": "text",
+                  "uuid": "b0c05a92-860e-4df3-9731-9b48208ee20a",
+                  "disabled": true
+                },
+                {
+                  "key": "address1",
+                  "value": "{{address1}}",
+                  "type": "text",
+                  "uuid": "98f98ee8-a5f2-42cd-823b-2c40668b1d72",
+                  "description": "required"
+                },
+                {
+                  "key": "address2",
+                  "value": "{{address2}}",
+                  "type": "text",
+                  "uuid": "1521a07f-6a8e-4b30-9ff7-e390933056f3",
+                  "disabled": true
+                },
+                {
+                  "key": "country",
+                  "value": "{{country}}",
+                  "type": "text",
+                  "uuid": "3770545d-2cef-4dc2-ba90-1fb28fd559a8",
+                  "description": "required"
+                },
+                {
+                  "key": "state",
+                  "value": "{{state}}",
+                  "type": "text",
+                  "uuid": "70068fae-3796-43b4-9cc3-9e4c3d565600",
+                  "description": "required"
+                },
+                {
+                  "key": "city",
+                  "value": "{{city}}",
+                  "type": "text",
+                  "uuid": "61413249-c004-40b6-b468-1daee68061cc",
+                  "description": "required"
+                },
+                {
+                  "key": "zipcode",
+                  "value": "{{zipcode}}",
+                  "type": "text",
+                  "uuid": "28f2146b-41de-4677-aa67-86344034d2a2",
+                  "description": "required"
+                },
+                {
+                  "key": "mobile_number",
+                  "value": "{{mobile_number}}",
+                  "type": "text",
+                  "uuid": "fac9203a-fa2a-418a-bbf5-e9497fe406fa",
+                  "description": "required"
+                }
+              ]
+            },
+            "url": {
+              "raw": "https://automationexercise.com/api/createAccount",
+              "protocol": "https",
+              "host": [
+                "automationexercise",
+                "com"
+              ],
+              "path": [
+                "api",
+                "createAccount"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Account - missing country",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"HTTP Status code is 400\", function () {\r",
+                  "    pm.response.to.have.status(400);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Body response code is 400\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData.responseCode).to.eql(400);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Error message: missing parameter is mentioned\", function () {\r",
+                  "    pm.expect(pm.response.json().message)\r",
+                  "    .include(\"country parameter is missing\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time is less than 1000ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "name",
+                  "value": "{{name}}",
+                  "type": "text",
+                  "uuid": "31248ec2-fb52-4388-ae46-360e781fc3dd",
+                  "description": "required"
+                },
+                {
+                  "key": "email",
+                  "value": "{{email}}",
+                  "type": "text",
+                  "uuid": "7f3e6e2b-b57d-4148-9b46-51916da22237",
+                  "description": "required"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password}}",
+                  "type": "text",
+                  "uuid": "ab5d232b-b7ac-4ef6-b0cb-776acc7dbe55",
+                  "description": "required"
+                },
+                {
+                  "key": "title",
+                  "value": "{{title}}",
+                  "type": "text",
+                  "uuid": "d42549e9-f107-4f60-b160-3f6529a10af9",
+                  "disabled": true
+                },
+                {
+                  "key": "birth_date",
+                  "value": "{{birth_day}}",
+                  "type": "text",
+                  "uuid": "0797ed07-105c-4dff-bd08-438a9b52d07f",
+                  "disabled": true
+                },
+                {
+                  "key": "birth_month",
+                  "value": "{{birth_month}}",
+                  "type": "text",
+                  "uuid": "1ff738f5-cea4-4d00-aa13-0345c7bfa551",
+                  "disabled": true
+                },
+                {
+                  "key": "birth_year",
+                  "value": "{{birth_year}}",
+                  "type": "text",
+                  "uuid": "70e64dc4-4e92-4e63-b27d-640b99c226d4",
+                  "disabled": true
+                },
+                {
+                  "key": "firstname",
+                  "value": "{{firstname}}",
+                  "type": "text",
+                  "uuid": "ed8c77af-a829-4cc5-946b-a62748e4e501",
+                  "description": "required"
+                },
+                {
+                  "key": "lastname",
+                  "value": "{{lastname}}",
+                  "type": "text",
+                  "uuid": "71548f82-b0f4-4f48-b759-155e7e3fbc27",
+                  "description": "required"
+                },
+                {
+                  "key": "company",
+                  "value": "{{company}}",
+                  "type": "text",
+                  "uuid": "b0c05a92-860e-4df3-9731-9b48208ee20a",
+                  "disabled": true
+                },
+                {
+                  "key": "address1",
+                  "value": "{{address1}}",
+                  "type": "text",
+                  "uuid": "98f98ee8-a5f2-42cd-823b-2c40668b1d72",
+                  "description": "required"
+                },
+                {
+                  "key": "address2",
+                  "value": "{{address2}}",
+                  "type": "text",
+                  "uuid": "1521a07f-6a8e-4b30-9ff7-e390933056f3",
+                  "disabled": true
+                },
+                {
+                  "key": "country",
+                  "value": "{{country}}",
+                  "type": "text",
+                  "uuid": "3770545d-2cef-4dc2-ba90-1fb28fd559a8",
+                  "description": "required - DO NOT set it True in this test",
+                  "disabled": true
+                },
+                {
+                  "key": "state",
+                  "value": "{{state}}",
+                  "type": "text",
+                  "uuid": "70068fae-3796-43b4-9cc3-9e4c3d565600",
+                  "description": "required"
+                },
+                {
+                  "key": "city",
+                  "value": "{{city}}",
+                  "type": "text",
+                  "uuid": "61413249-c004-40b6-b468-1daee68061cc",
+                  "description": "required"
+                },
+                {
+                  "key": "zipcode",
+                  "value": "{{zipcode}}",
+                  "type": "text",
+                  "uuid": "28f2146b-41de-4677-aa67-86344034d2a2",
+                  "description": "required"
+                },
+                {
+                  "key": "mobile_number",
+                  "value": "{{mobile_number}}",
+                  "type": "text",
+                  "uuid": "fac9203a-fa2a-418a-bbf5-e9497fe406fa",
+                  "description": "required"
+                }
+              ]
+            },
+            "url": {
+              "raw": "https://automationexercise.com/api/createAccount",
+              "protocol": "https",
+              "host": [
+                "automationexercise",
+                "com"
+              ],
+              "path": [
+                "api",
+                "createAccount"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Account - missing mobile_number",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"HTTP Status code is 400\", function () {\r",
+                  "    pm.response.to.have.status(400);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Body response code is 400\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData.responseCode).to.eql(400);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Error message: missing parameter is mentioned\", function () {\r",
+                  "    pm.expect(pm.response.json().message)\r",
+                  "    .include(\"mobile_number parameter is missing\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time is less than 1000ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "name",
+                  "value": "{{name}}",
+                  "type": "text",
+                  "uuid": "31248ec2-fb52-4388-ae46-360e781fc3dd",
+                  "description": "required"
+                },
+                {
+                  "key": "email",
+                  "value": "{{email}}",
+                  "type": "text",
+                  "uuid": "7f3e6e2b-b57d-4148-9b46-51916da22237",
+                  "description": "required"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password}}",
+                  "type": "text",
+                  "uuid": "ab5d232b-b7ac-4ef6-b0cb-776acc7dbe55",
+                  "description": "required"
+                },
+                {
+                  "key": "title",
+                  "value": "{{title}}",
+                  "type": "text",
+                  "uuid": "d42549e9-f107-4f60-b160-3f6529a10af9",
+                  "disabled": true
+                },
+                {
+                  "key": "birth_date",
+                  "value": "{{birth_day}}",
+                  "type": "text",
+                  "uuid": "0797ed07-105c-4dff-bd08-438a9b52d07f",
+                  "disabled": true
+                },
+                {
+                  "key": "birth_month",
+                  "value": "{{birth_month}}",
+                  "type": "text",
+                  "uuid": "1ff738f5-cea4-4d00-aa13-0345c7bfa551",
+                  "disabled": true
+                },
+                {
+                  "key": "birth_year",
+                  "value": "{{birth_year}}",
+                  "type": "text",
+                  "uuid": "70e64dc4-4e92-4e63-b27d-640b99c226d4",
+                  "disabled": true
+                },
+                {
+                  "key": "firstname",
+                  "value": "{{firstname}}",
+                  "type": "text",
+                  "uuid": "ed8c77af-a829-4cc5-946b-a62748e4e501",
+                  "description": "required"
+                },
+                {
+                  "key": "lastname",
+                  "value": "{{lastname}}",
+                  "type": "text",
+                  "uuid": "71548f82-b0f4-4f48-b759-155e7e3fbc27",
+                  "description": "required"
+                },
+                {
+                  "key": "company",
+                  "value": "{{company}}",
+                  "type": "text",
+                  "uuid": "b0c05a92-860e-4df3-9731-9b48208ee20a",
+                  "disabled": true
+                },
+                {
+                  "key": "address1",
+                  "value": "{{address1}}",
+                  "type": "text",
+                  "uuid": "98f98ee8-a5f2-42cd-823b-2c40668b1d72",
+                  "description": "required"
+                },
+                {
+                  "key": "address2",
+                  "value": "{{address2}}",
+                  "type": "text",
+                  "uuid": "1521a07f-6a8e-4b30-9ff7-e390933056f3",
+                  "disabled": true
+                },
+                {
+                  "key": "country",
+                  "value": "{{country}}",
+                  "type": "text",
+                  "uuid": "3770545d-2cef-4dc2-ba90-1fb28fd559a8",
+                  "description": "required"
+                },
+                {
+                  "key": "state",
+                  "value": "{{state}}",
+                  "type": "text",
+                  "uuid": "70068fae-3796-43b4-9cc3-9e4c3d565600",
+                  "description": "required"
+                },
+                {
+                  "key": "city",
+                  "value": "{{city}}",
+                  "type": "text",
+                  "uuid": "61413249-c004-40b6-b468-1daee68061cc",
+                  "description": "required"
+                },
+                {
+                  "key": "zipcode",
+                  "value": "{{zipcode}}",
+                  "type": "text",
+                  "uuid": "28f2146b-41de-4677-aa67-86344034d2a2",
+                  "description": "required"
+                },
+                {
+                  "key": "mobile_number",
+                  "value": "{{mobile_number}}",
+                  "type": "text",
+                  "uuid": "fac9203a-fa2a-418a-bbf5-e9497fe406fa",
+                  "description": "required - DO NOT set it True in this test",
+                  "disabled": true
+                }
+              ]
+            },
+            "url": {
+              "raw": "https://automationexercise.com/api/createAccount",
+              "protocol": "https",
+              "host": [
+                "automationexercise",
+                "com"
+              ],
+              "path": [
+                "api",
+                "createAccount"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Account with existing email",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"HTTP Status code is 400 (existing email)\", function () {\r",
+                  "    pm.response.to.have.status(400);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Body response code is 400\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData.responseCode).to.eql(400);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Error message: Email already exists\", function () {\r",
+                  "    pm.expect(pm.response.json().message).to.eql(\"Email already exists!\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time is less than 1000ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "name",
+                  "value": "{{name}}",
+                  "type": "text",
+                  "uuid": "31248ec2-fb52-4388-ae46-360e781fc3dd"
+                },
+                {
+                  "key": "email",
+                  "value": "{{email}}",
+                  "type": "text",
+                  "uuid": "7f3e6e2b-b57d-4148-9b46-51916da22237",
+                  "description": "Needs to be same as created before"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password}}",
+                  "type": "text",
+                  "uuid": "ab5d232b-b7ac-4ef6-b0cb-776acc7dbe55"
+                },
+                {
+                  "key": "title",
+                  "value": "{{title}}",
+                  "type": "text",
+                  "uuid": "d42549e9-f107-4f60-b160-3f6529a10af9"
+                },
+                {
+                  "key": "birth_date",
+                  "value": "{{birth_day}}",
+                  "type": "text",
+                  "uuid": "0797ed07-105c-4dff-bd08-438a9b52d07f"
+                },
+                {
+                  "key": "birth_month",
+                  "value": "{{birth_month}}",
+                  "type": "text",
+                  "uuid": "1ff738f5-cea4-4d00-aa13-0345c7bfa551"
+                },
+                {
+                  "key": "birth_year",
+                  "value": "{{birth_year}}",
+                  "type": "text",
+                  "uuid": "70e64dc4-4e92-4e63-b27d-640b99c226d4"
+                },
+                {
+                  "key": "firstname",
+                  "value": "{{firstname}}",
+                  "type": "text",
+                  "uuid": "ed8c77af-a829-4cc5-946b-a62748e4e501"
+                },
+                {
+                  "key": "lastname",
+                  "value": "{{lastname}}",
+                  "type": "text",
+                  "uuid": "71548f82-b0f4-4f48-b759-155e7e3fbc27"
+                },
+                {
+                  "key": "company",
+                  "value": "{{company}}",
+                  "type": "text",
+                  "uuid": "b0c05a92-860e-4df3-9731-9b48208ee20a"
+                },
+                {
+                  "key": "address1",
+                  "value": "{{address1}}",
+                  "type": "text",
+                  "uuid": "98f98ee8-a5f2-42cd-823b-2c40668b1d72"
+                },
+                {
+                  "key": "address2",
+                  "value": "{{address2}}",
+                  "type": "text",
+                  "uuid": "1521a07f-6a8e-4b30-9ff7-e390933056f3"
+                },
+                {
+                  "key": "country",
+                  "value": "{{country}}",
+                  "type": "text",
+                  "uuid": "3770545d-2cef-4dc2-ba90-1fb28fd559a8"
+                },
+                {
+                  "key": "zipcode",
+                  "value": "{{zipcode}}",
+                  "type": "text",
+                  "uuid": "28f2146b-41de-4677-aa67-86344034d2a2"
+                },
+                {
+                  "key": "state",
+                  "value": "{{state}}",
+                  "type": "text",
+                  "uuid": "70068fae-3796-43b4-9cc3-9e4c3d565600"
+                },
+                {
+                  "key": "city",
+                  "value": "{{city}}",
+                  "type": "text",
+                  "uuid": "61413249-c004-40b6-b468-1daee68061cc"
+                },
+                {
+                  "key": "mobile_number",
+                  "value": "{{mobile_number}}",
+                  "type": "text",
+                  "uuid": "fac9203a-fa2a-418a-bbf5-e9497fe406fa"
+                }
+              ]
+            },
+            "url": {
+              "raw": "https://automationexercise.com/api/createAccount",
+              "protocol": "https",
+              "host": [
+                "automationexercise",
+                "com"
+              ],
+              "path": [
+                "api",
+                "createAccount"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Detail by Email",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"HTTP Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "var schema = {\r",
+                  "    \"type\": \"object\",\r",
+                  "    \"properties\": {\r",
+                  "        \"responseCode\": {\"type\": \"number\"},\r",
+                  "        \"user\": {\r",
+                  "            \"type\": \"object\",\r",
+                  "            \"required\": [\r",
+                  "                \"id\", \r",
+                  "                \"name\", \r",
+                  "                \"email\", \r",
+                  "                \"title\", \r",
+                  "                \"birth_day\", \r",
+                  "                \"birth_month\", \r",
+                  "                \"birth_year\", \r",
+                  "                \"first_name\", \r",
+                  "                \"last_name\", \"company\", \r",
+                  "                \"address1\", \r",
+                  "                \"address2\", \r",
+                  "                \"country\", \r",
+                  "                \"state\", \r",
+                  "                \"city\", \r",
+                  "                \"zipcode\"\r",
+                  "            ]  \r",
+                  "        }\r",
+                  "    },\r",
+                  "    \"required\": [\"responseCode\", \"user\"]\r",
+                  "};\r",
+                  "\r",
+                  "pm.test(\"Response matches JSON schema\", function () {\r",
+                  "    pm.response.to.have.jsonSchema(schema);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Body responseCode is 200\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData.responseCode).to.eql(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time is less than 1000ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Name is same as in created Account\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    var expectedName = pm.collectionVariables.get(\"name\");\r",
+                  "    pm.expect(jsonData.user.name).to.eql(expectedName);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Email is same as in created Account\", function() {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    var expectedEmail = pm.collectionVariables.get(\"email\");\r",
+                  "    pm.expect(jsonData.user.email).to.eql(expectedEmail);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Title is same as in created Account\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    var expectedTitle = pm.collectionVariables.get(\"title\");\r",
+                  "    pm.expect(jsonData.user.title).to.eql(expectedTitle);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Birth Day is same as in created Account\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    var expectedBirthDay = pm.collectionVariables.get(\"birth_day\");\r",
+                  "    pm.expect(jsonData.user.birth_day).to.eql(expectedBirthDay);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Birth Month is same as in created Account\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    var expectedBirthMonth = pm.collectionVariables.get(\"birth_month\");\r",
+                  "    pm.expect(jsonData.user.birth_month).to.eql(expectedBirthMonth);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Birth Year is same as in created Account\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    var expectedBirthYear = pm.collectionVariables.get(\"birth_year\");\r",
+                  "    pm.expect(jsonData.user.birth_year).to.eql(expectedBirthYear);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Firstname is same as in created Account\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    var expectedFirstName = pm.collectionVariables.get(\"firstname\");\r",
+                  "    pm.expect(jsonData.user.first_name).to.eql(expectedFirstName);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Lastname is same as in created Account\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    var expectedLastName = pm.collectionVariables.get(\"lastname\");\r",
+                  "    pm.expect(jsonData.user.last_name).to.eql(expectedLastName);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Company is same as in created Account\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    var expectedCompany = pm.collectionVariables.get(\"company\");\r",
+                  "    pm.expect(jsonData.user.company).to.eql(expectedCompany);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Address1 is same as in created Account\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    var expectedAddress1 = pm.collectionVariables.get(\"address1\");\r",
+                  "    pm.expect(jsonData.user.address1).to.eql(expectedAddress1);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Address2 is same as in created Account\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    var expectedAddress2 = pm.collectionVariables.get(\"address2\");\r",
+                  "    pm.expect(jsonData.user.address2).to.eql(expectedAddress2);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Country is same as in created Account\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    var expectedCountry = pm.collectionVariables.get(\"country\");\r",
+                  "    pm.expect(jsonData.user.country).to.eql(expectedCountry);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"State is same as in created Account\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    var expectedState = pm.collectionVariables.get(\"state\");\r",
+                  "    pm.expect(jsonData.user.state).to.eql(expectedState);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"City is same as in created Account\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    var expectedCity = pm.collectionVariables.get(\"city\");\r",
+                  "    pm.expect(jsonData.user.city).to.eql(expectedCity);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Zipcode is same as in created Account\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    var expectedZipcode = pm.collectionVariables.get(\"zipcode\");\r",
+                  "    pm.expect(jsonData.user.zipcode).to.eql(expectedZipcode);\r",
+                  "});\r",
+                  "\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "packages": {},
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": []
+            },
+            "url": {
+              "raw": "https://automationexercise.com/api/getUserDetailByEmail?email={{email}}",
+              "protocol": "https",
+              "host": [
+                "automationexercise",
+                "com"
+              ],
+              "path": [
+                "api",
+                "getUserDetailByEmail"
+              ],
+              "query": [
+                {
+                  "key": "email",
+                  "value": "{{email}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Account",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "// Updated (new) data\r",
+                  "pm.collectionVariables.set(\"updated_address1\", \"Updated Address1\");\r",
+                  "pm.collectionVariables.set(\"updated_address2\", \"Updated Address2\");\r",
+                  "pm.collectionVariables.set(\"updated_city\", \"Updated City\");\r",
+                  "pm.collectionVariables.set(\"updated_zipcode\", \"Updated ZipCode\");\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"HTTP Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "var schema = {\r",
+                  "    \"type\": \"object\",\r",
+                  "    \"properties\": {\r",
+                  "        \"responseCode\": {\"type\": \"number\"},\r",
+                  "        \"message\": {\"type\": \"string\"}\r",
+                  "    },\r",
+                  "    \"required\": [\"responseCode\", \"message\"]\r",
+                  "};\r",
+                  "\r",
+                  "pm.test(\"Response matches JSON schema\", function () {\r",
+                  "    pm.response.to.have.jsonSchema(schema);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Body response code is 200\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData.responseCode).to.eql(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Success message: User updated\", function () {\r",
+                  "    pm.expect(pm.response.json().message).to.eql(\"User updated!\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time is less than 1000ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Content-Type is application/json\", function () {\r",
+                  "    pm.response.to.have.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "name",
+                  "value": "{{name}}",
+                  "description": "required",
+                  "type": "text",
+                  "uuid": "31248ec2-fb52-4388-ae46-360e781fc3dd"
+                },
+                {
+                  "key": "email",
+                  "value": "{{email}}",
+                  "description": "required",
+                  "type": "text",
+                  "uuid": "7f3e6e2b-b57d-4148-9b46-51916da22237"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password}}",
+                  "description": "required",
+                  "type": "text",
+                  "uuid": "ab5d232b-b7ac-4ef6-b0cb-776acc7dbe55"
+                },
+                {
+                  "key": "title",
+                  "value": "{{title}}",
+                  "type": "text",
+                  "uuid": "d42549e9-f107-4f60-b160-3f6529a10af9"
+                },
+                {
+                  "key": "birth_date",
+                  "value": "{{birth_day}}",
+                  "type": "text",
+                  "uuid": "0797ed07-105c-4dff-bd08-438a9b52d07f"
+                },
+                {
+                  "key": "birth_month",
+                  "value": "{{birth_month}}",
+                  "type": "text",
+                  "uuid": "1ff738f5-cea4-4d00-aa13-0345c7bfa551"
+                },
+                {
+                  "key": "birth_year",
+                  "value": "{{birth_year}}",
+                  "type": "text",
+                  "uuid": "70e64dc4-4e92-4e63-b27d-640b99c226d4"
+                },
+                {
+                  "key": "firstname",
+                  "value": "{{firstname}}",
+                  "description": "required",
+                  "type": "text",
+                  "uuid": "ed8c77af-a829-4cc5-946b-a62748e4e501"
+                },
+                {
+                  "key": "lastname",
+                  "value": "{{lastname}}",
+                  "description": "required",
+                  "type": "text",
+                  "uuid": "71548f82-b0f4-4f48-b759-155e7e3fbc27"
+                },
+                {
+                  "key": "company",
+                  "value": "{{company}}",
+                  "type": "text",
+                  "uuid": "b0c05a92-860e-4df3-9731-9b48208ee20a"
+                },
+                {
+                  "key": "address1",
+                  "value": "{{updated_address1}}",
+                  "description": "required",
+                  "type": "text",
+                  "uuid": "98f98ee8-a5f2-42cd-823b-2c40668b1d72"
+                },
+                {
+                  "key": "address2",
+                  "value": "{{updated_address2}}",
+                  "type": "text",
+                  "uuid": "1521a07f-6a8e-4b30-9ff7-e390933056f3"
+                },
+                {
+                  "key": "country",
+                  "value": "{{country}}",
+                  "description": "required",
+                  "type": "text",
+                  "uuid": "3770545d-2cef-4dc2-ba90-1fb28fd559a8"
+                },
+                {
+                  "key": "state",
+                  "value": "{{state}}",
+                  "description": "required",
+                  "type": "text",
+                  "uuid": "70068fae-3796-43b4-9cc3-9e4c3d565600"
+                },
+                {
+                  "key": "city",
+                  "value": "{{updated_city}}",
+                  "description": "required",
+                  "type": "text",
+                  "uuid": "61413249-c004-40b6-b468-1daee68061cc"
+                },
+                {
+                  "key": "zipcode",
+                  "value": "{{updated_zipcode}}",
+                  "description": "required",
+                  "type": "text",
+                  "uuid": "28f2146b-41de-4677-aa67-86344034d2a2"
+                },
+                {
+                  "key": "mobile_number",
+                  "value": "{{mobile_number}}",
+                  "description": "required",
+                  "type": "text",
+                  "uuid": "fac9203a-fa2a-418a-bbf5-e9497fe406fa"
+                }
+              ]
+            },
+            "url": {
+              "raw": "https://automationexercise.com/api/updateAccount",
+              "protocol": "https",
+              "host": [
+                "automationexercise",
+                "com"
+              ],
+              "path": [
+                "api",
+                "updateAccount"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Detail by Email - Updated Account",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Address1 is updated\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    var expectedAddress1 = pm.collectionVariables.get(\"updated_address1\");\r",
+                  "    pm.expect(jsonData.user.address1).to.eql(expectedAddress1);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Address2 is updated\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    var expectedAddress2 = pm.collectionVariables.get(\"updated_address2\");\r",
+                  "    pm.expect(jsonData.user.address2).to.eql(expectedAddress2);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"City is updated\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    var expectedCity = pm.collectionVariables.get(\"updated_city\");\r",
+                  "    pm.expect(jsonData.user.city).to.eql(expectedCity);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"ZipCode is updated\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    var expectedZipcode = pm.collectionVariables.get(\"updated_zipcode\");\r",
+                  "    pm.expect(jsonData.user.zipcode).to.eql(expectedZipcode);\r",
+                  "});\r",
+                  "\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": []
+            },
+            "url": {
+              "raw": "https://automationexercise.com/api/getUserDetailByEmail?email={{email}}",
+              "protocol": "https",
+              "host": [
+                "automationexercise",
+                "com"
+              ],
+              "path": [
+                "api",
+                "getUserDetailByEmail"
+              ],
+              "query": [
+                {
+                  "key": "email",
+                  "value": "{{email}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Account",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"HTTP Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "var schema = {\r",
+                  "    \"type\": \"object\",\r",
+                  "    \"properties\": {\r",
+                  "        \"responseCode\": {\"type\": \"number\"},\r",
+                  "        \"message\": {\"type\": \"string\"}\r",
+                  "    },\r",
+                  "    \"required\": [\"responseCode\", \"message\"]\r",
+                  "};\r",
+                  "\r",
+                  "pm.test(\"Response matches JSON schema\", function () {\r",
+                  "    pm.response.to.have.jsonSchema(schema);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Body status code is 200\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData.responseCode).to.eql(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Success message: Account deleted\", function () {\r",
+                  "    pm.expect(pm.response.json().message).to.eql(\"Account deleted!\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time is less than 1000ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Content-Type is application/json\", function () {\r",
+                  "    pm.response.to.have.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+                  "});\r",
+                  "\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "email",
+                  "value": "{{email}}",
+                  "type": "text",
+                  "uuid": "f64684e6-4d44-4f46-bf18-3272b0ce182d"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password}}",
+                  "type": "text",
+                  "uuid": "9437f728-d907-4a18-af98-8fc209e56451"
+                }
+              ]
+            },
+            "url": {
+              "raw": "https://automationexercise.com/api/deleteAccount",
+              "protocol": "https",
+              "host": [
+                "automationexercise",
+                "com"
+              ],
+              "path": [
+                "api",
+                "deleteAccount"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Detail - Deleted User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"HTTP Status code is 404\", function () {\r",
+                  "    pm.response.to.have.status(404);\r",
+                  "});\r",
+                  "\r",
+                  "var schema = {\r",
+                  "    \"type\": \"object\",\r",
+                  "    \"properties\": {\r",
+                  "        \"responseCode\": {\"type\": \"number\"},\r",
+                  "        \"message\": {\"type\": \"string\"}\r",
+                  "    },\r",
+                  "    \"required\": [\"responseCode\", \"message\"]\r",
+                  "};\r",
+                  "\r",
+                  "pm.test(\"Response matches JSON schema\", function () {\r",
+                  "    pm.response.to.have.jsonSchema(schema);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Body status code is 404\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData.responseCode).to.eql(404);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Error message: not found\", function () {\r",
+                  "    pm.expect(pm.response.json().message).to.include(\"not found\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time is less than 1000ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Content-Type is application/json\", function () {\r",
+                  "    pm.response.to.have.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+                  "});\r",
+                  "\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": []
+            },
+            "url": {
+              "raw": "https://automationexercise.com/api/getUserDetailByEmail?email={{email}}",
+              "protocol": "https",
+              "host": [
+                "automationexercise",
+                "com"
+              ],
+              "path": [
+                "api",
+                "getUserDetailByEmail"
+              ],
+              "query": [
+                {
+                  "key": "email",
+                  "value": "{{email}}"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Create Account with only required data",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"HTTP Status code is 201 (new user)\", function () {\r",
+                  "    pm.response.to.have.status(201);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Body response code is 201\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData.responseCode).to.eql(201);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Success message\", function () {\r",
+                  "    pm.expect(pm.response.json().message).to.eql(\"User created!\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time is less than 1000ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "var timestamp = Date.now();\r",
+                  "var uniqueEmail = \"testUser\" + timestamp + \"@email.com\";\r",
+                  "\r",
+                  "// Created User data (only required)\r",
+                  "pm.collectionVariables.set(\"name\", \"AuthTestName\");\r",
+                  "pm.collectionVariables.set(\"email\", uniqueEmail);\r",
+                  "pm.collectionVariables.set(\"password\", \"AuthTestpass123\");\r",
+                  "pm.collectionVariables.set(\"firstname\", \"Auth\");\r",
+                  "pm.collectionVariables.set(\"lastname\", \"Tester\");\r",
+                  "pm.collectionVariables.set(\"address1\", \"AuthTestAddress1\");\r",
+                  "pm.collectionVariables.set(\"country\", \"India\");\r",
+                  "pm.collectionVariables.set(\"state\", \"AuthTestState\");\r",
+                  "pm.collectionVariables.set(\"city\", \"AuthTestCity\");\r",
+                  "pm.collectionVariables.set(\"zipcode\", \"Auth ZC 12345\");\r",
+                  "pm.collectionVariables.set(\"mobile_number\", \"+9876543210\");\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "name",
+                  "value": "{{name}}",
+                  "description": "required",
+                  "type": "text",
+                  "uuid": "31248ec2-fb52-4388-ae46-360e781fc3dd"
+                },
+                {
+                  "key": "email",
+                  "value": "{{email}}",
+                  "description": "required",
+                  "type": "text",
+                  "uuid": "7f3e6e2b-b57d-4148-9b46-51916da22237"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password}}",
+                  "description": "required",
+                  "type": "text",
+                  "uuid": "ab5d232b-b7ac-4ef6-b0cb-776acc7dbe55"
+                },
+                {
+                  "key": "firstname",
+                  "value": "{{firstname}}",
+                  "description": "required",
+                  "type": "text",
+                  "uuid": "ed8c77af-a829-4cc5-946b-a62748e4e501"
+                },
+                {
+                  "key": "lastname",
+                  "value": "{{lastname}}",
+                  "description": "required",
+                  "type": "text",
+                  "uuid": "71548f82-b0f4-4f48-b759-155e7e3fbc27"
+                },
+                {
+                  "key": "address1",
+                  "value": "{{address1}}",
+                  "description": "required",
+                  "type": "text",
+                  "uuid": "98f98ee8-a5f2-42cd-823b-2c40668b1d72"
+                },
+                {
+                  "key": "country",
+                  "value": "{{country}}",
+                  "description": "required",
+                  "type": "text",
+                  "uuid": "3770545d-2cef-4dc2-ba90-1fb28fd559a8"
+                },
+                {
+                  "key": "state",
+                  "value": "{{state}}",
+                  "description": "required",
+                  "type": "text",
+                  "uuid": "70068fae-3796-43b4-9cc3-9e4c3d565600"
+                },
+                {
+                  "key": "city",
+                  "value": "{{city}}",
+                  "description": "required",
+                  "type": "text",
+                  "uuid": "61413249-c004-40b6-b468-1daee68061cc"
+                },
+                {
+                  "key": "zipcode",
+                  "value": "{{zipcode}}",
+                  "description": "required",
+                  "type": "text",
+                  "uuid": "28f2146b-41de-4677-aa67-86344034d2a2"
+                },
+                {
+                  "key": "mobile_number",
+                  "value": "{{mobile_number}}",
+                  "description": "required",
+                  "type": "text",
+                  "uuid": "fac9203a-fa2a-418a-bbf5-e9497fe406fa"
+                }
+              ]
+            },
+            "url": {
+              "raw": "https://automationexercise.com/api/createAccount",
+              "protocol": "https",
+              "host": [
+                "automationexercise",
+                "com"
+              ],
+              "path": [
+                "api",
+                "createAccount"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Login - valid data",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"HTTP Status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "var schema = {\r",
+                  "    \"type\": \"object\",\r",
+                  "    \"properties\": {\r",
+                  "        \"responseCode\": {\"type\": \"number\"},\r",
+                  "        \"message\": {\"type\": \"string\"}\r",
+                  "    },\r",
+                  "    \"required\": [\"responseCode\", \"message\"]\r",
+                  "};\r",
+                  "\r",
+                  "pm.test(\"Response matches JSON schema\", function () {\r",
+                  "    pm.response.to.have.jsonSchema(schema);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"ResponseCode is 200\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData.responseCode).to.eql(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response message is 'User exists!'\", function () {\r",
+                  "    pm.expect(pm.response.json().message).to.eql(\"User exists!\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time is less than 1000ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Content-Type is present\", function () {\r",
+                  "    pm.response.to.have.header(\"Content-Type\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Content-Type is application/json\", function () {\r",
+                  "    pm.response.to.have.header(\"Content-Type\", \"application/json; charset=utf-8\");\r",
+                  "});\r",
+                  "\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "email",
+                  "value": "{{email}}",
+                  "type": "text",
+                  "uuid": "a2aff84b-0ac4-4842-b779-a00878796d16"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password}}",
+                  "type": "text",
+                  "uuid": "75a12e0d-e00a-465c-8ed6-2f56f8c5e90b"
+                }
+              ]
+            },
+            "url": {
+              "raw": "https://automationexercise.com/api/verifyLogin",
+              "protocol": "https",
+              "host": [
+                "automationexercise",
+                "com"
+              ],
+              "path": [
+                "api",
+                "verifyLogin"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Login - invalid password",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"HTTP Status code is 404\", function () {\r",
+                  "    pm.response.to.have.status(404);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"ResponseCode is 404\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData.responseCode).to.eql(404);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Error message: 'User not found' (user data is not mentioned)\", function () {\r",
+                  "    pm.expect(pm.response.json().message).to.eql(\"User not found!\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time is less than 1000ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "email",
+                  "value": "{{email}}",
+                  "type": "text",
+                  "uuid": "4a5f88f7-76bc-49be-a33e-75e5ae9c9ed8"
+                },
+                {
+                  "key": "password",
+                  "value": "invalidPassword",
+                  "type": "text",
+                  "uuid": "c3ab7e39-eac7-4177-964e-26aa818d8962"
+                }
+              ]
+            },
+            "url": {
+              "raw": "https://automationexercise.com/api/verifyLogin",
+              "protocol": "https",
+              "host": [
+                "automationexercise",
+                "com"
+              ],
+              "path": [
+                "api",
+                "verifyLogin"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Login - invalid email",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"HTTP Status code is 404\", function () {\r",
+                  "    pm.response.to.have.status(404);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"ResponseCode is 404\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData.responseCode).to.eql(404);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Error message: 'User not found' (user data is not mentioned)\", function () {\r",
+                  "    pm.expect(pm.response.json().message).to.eql(\"User not found!\");\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time is less than 1000ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "email",
+                  "value": "invalid@email.com",
+                  "type": "text",
+                  "uuid": "4fa8a274-97ab-4f36-b328-cca7198e84db"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password}}",
+                  "type": "text",
+                  "uuid": "9b1d0466-dd13-4e2d-8a87-f107d7c33932"
+                }
+              ]
+            },
+            "url": {
+              "raw": "https://automationexercise.com/api/verifyLogin",
+              "protocol": "https",
+              "host": [
+                "automationexercise",
+                "com"
+              ],
+              "path": [
+                "api",
+                "verifyLogin"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Login - missing parameters",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"HTTP Status code is 400\", function () {\r",
+                  "    pm.response.to.have.status(400);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"ResponseCode is 400\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData.responseCode).to.eql(400);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Error message: missing parameters are mentioned\", function () {\r",
+                  "    pm.expect(pm.response.json().message).to.include(\"email or password parameter is missing\")\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response time is less than 1000ms\", function () {\r",
+                  "    pm.expect(pm.response.responseTime).to.be.below(1000);\r",
+                  "});\r",
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": []
+            },
+            "url": {
+              "raw": "https://automationexercise.com/api/verifyLogin",
+              "protocol": "https",
+              "host": [
+                "automationexercise",
+                "com"
+              ],
+              "path": [
+                "api",
+                "verifyLogin"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Account (last created)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "email",
+                  "value": "{{email}}",
+                  "type": "text",
+                  "uuid": "f64684e6-4d44-4f46-bf18-3272b0ce182d"
+                },
+                {
+                  "key": "password",
+                  "value": "{{password}}",
+                  "type": "text",
+                  "uuid": "9437f728-d907-4a18-af98-8fc209e56451"
+                }
+              ]
+            },
+            "url": {
+              "raw": "https://automationexercise.com/api/deleteAccount",
+              "protocol": "https",
+              "host": [
+                "automationexercise",
+                "com"
+              ],
+              "path": [
+                "api",
+                "deleteAccount"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "testUserEmail",
+      "value": ""
+    },
+    {
+      "key": "email",
+      "value": ""
+    },
+    {
+      "key": "name",
+      "value": ""
+    },
+    {
+      "key": "title",
+      "value": ""
+    },
+    {
+      "key": "birth_day",
+      "value": ""
+    },
+    {
+      "key": "birth_month",
+      "value": ""
+    },
+    {
+      "key": "birth_year",
+      "value": ""
+    },
+    {
+      "key": "firstname",
+      "value": ""
+    },
+    {
+      "key": "lastname",
+      "value": ""
+    },
+    {
+      "key": "company",
+      "value": ""
+    },
+    {
+      "key": "address1",
+      "value": ""
+    },
+    {
+      "key": "address2",
+      "value": ""
+    },
+    {
+      "key": "country",
+      "value": ""
+    },
+    {
+      "key": "state",
+      "value": ""
+    },
+    {
+      "key": "city",
+      "value": ""
+    },
+    {
+      "key": "zipcode",
+      "value": ""
+    },
+    {
+      "key": "password",
+      "value": ""
+    },
+    {
+      "key": "mobile_number",
+      "value": ""
+    },
+    {
+      "key": "updated_address1",
+      "value": ""
+    },
+    {
+      "key": "updated_address2",
+      "value": ""
+    },
+    {
+      "key": "updated_city",
+      "value": ""
+    },
+    {
+      "key": "updated_zipcode",
+      "value": ""
+    }
+  ]
+}
