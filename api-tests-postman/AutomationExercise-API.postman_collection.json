@@ -319,31 +319,10 @@
             {
               "listen": "test",
               "script": {
-                "exec": [
-                  "pm.test(\"HTTP status code is 200\", function () {\r",
-                  "    pm.response.to.have.status(200);\r",
-                  "});\r",
-                  "\r",
-                  "pm.test(\"Response has responseCode and Products\", function () {\r",
-                  "    var jsonData = pm.response.json();\r",
-                  "    pm.expect(jsonData).to.have.property('responseCode');\r",
-                  "    pm.expect(jsonData).to.have.property('products');\r",
-                  "});\r",
-                  "\r",
-                  "pm.test(\"Body response code is 200\", function () {\r",
-                  "    var jsonData = pm.response.json();\r",
-                  "    pm.expect(jsonData.responseCode).to.eql(200);\r",
-                  "});\r",
-                  "\r",
-                  "pm.test(\"Response does not contain products\", function () {\r",
-                  "    var jsonData = pm.response.json();\r",
-                  "    pm.expect(jsonData.products).to.eql([]);\r",
-                  "});\r",
-                  ""
-                ],
                 "type": "text/javascript",
-                "packages": {},
-                "requests": {}
+                "exec": [
+                  "pm.test(\"HTTP status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Response has responseCode and Products\", function () {\r\n    var jsonData = pm.response.json();\r\n    pm.expect(jsonData).to.have.property('responseCode');\r\n    pm.expect(jsonData).to.have.property('products');\r\n});\r\n\r\npm.test(\"Body response code is 200\", function () {\r\n    var jsonData = pm.response.json();\r\n    pm.expect(jsonData.responseCode).to.eql(200);\r\n});\r\n\r\npm.test(\"Response contains products\", function () {\r\n    var jsonData = pm.response.json();\r\n    pm.expect(jsonData.products.length).to.be.above(0);\r\n});\r\n"
+                ]
               }
             }
           ],
@@ -355,9 +334,7 @@
               "urlencoded": [
                 {
                   "key": "search_product",
-                  "value": "\"\"",
-                  "type": "text",
-                  "uuid": "d3f7f9ce-3331-4c51-bba7-0993b6f7884d"
+                  "value": ""
                 }
               ]
             },
