@@ -321,7 +321,26 @@
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "pm.test(\"HTTP status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Response has responseCode and Products\", function () {\r\n    var jsonData = pm.response.json();\r\n    pm.expect(jsonData).to.have.property('responseCode');\r\n    pm.expect(jsonData).to.have.property('products');\r\n});\r\n\r\npm.test(\"Body response code is 200\", function () {\r\n    var jsonData = pm.response.json();\r\n    pm.expect(jsonData.responseCode).to.eql(200);\r\n});\r\n\r\npm.test(\"Response contains products\", function () {\r\n    var jsonData = pm.response.json();\r\n    pm.expect(jsonData.products.length).to.be.above(0);\r\n});\r\n"
+                  "pm.test(\"HTTP status code is 200\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response has responseCode and Products\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData).to.have.property('responseCode');\r",
+                  "    pm.expect(jsonData).to.have.property('products');\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Body response code is 200\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData.responseCode).to.eql(200);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Response does not contain products\", function () {\r",
+                  "    var jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData.products.length).to.be.above(0);\r",
+                  "});\r",
+                  ""
                 ]
               }
             }
