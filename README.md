@@ -18,4 +18,4 @@ pip install -r requirements.txt
 playwright install
 
 ## Run Tests
-pytest tests/ -v --headed
+pytest tests -v --headed
