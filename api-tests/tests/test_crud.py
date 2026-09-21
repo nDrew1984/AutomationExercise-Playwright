@@ -6,13 +6,22 @@ import pytest
 import requests
 import jsonschema
 from api_schemas import RESPONSE_CODE_MESSAGE_SCHEMA, READ_ACCOUNT_SCHEMA, UPDATED_ACCOUNT_SCHEMA
-from api_endpoints import GET_USER_DETAIL
+from api_endpoints import GET_USER_DETAIL, CREATE_ACCOUNT
+from api_test_data import MANDATORY_DATA
 
 # Create Account - status code
 @pytest.mark.xfail(reason="API bug: returns HTTP 200 instead of 201")
 def test_create_account(created_account):
     response: requests.Response = created_account["response"]
     assert response.status_code == 201
+
+# Negative test - Create Account with existing email
+def test_create_account_existing(created_account, session, base_url):
+    response = session.post(f"{base_url}{CREATE_ACCOUNT}", data=created_account["account_data"])
+    json_data = response.json()
+
+    assert json_data["responseCode"] == 400
+    assert json_data["message"] == "Email already exists!"
 
 # Create Account - schema validation
 def test_created_account_response_matches_schema(created_account):
@@ -234,3 +243,21 @@ def test_read_deleted_account_content_type(deleted_account, session, base_url):
     response = session.get(f"{base_url}{GET_USER_DETAIL}", params={"email": email})
 
     assert response.headers["Content-Type"] == "application/json; charset=utf-8"
+
+# Negative test - Create Account with missing mandatory parameter
+@pytest.mark.parametrize("missing_field", [
+    "name", "email", "password", "firstname", "lastname", 
+    "address1", "country", "state", "city", "zipcode", "mobile_number"
+    ])
+def test_create_account_missing_mandatory_field(session, base_url, missing_field):
+    missing_data = MANDATORY_DATA.copy()
+    del missing_data[missing_field]
+
+    response = session.post(f"{base_url}{CREATE_ACCOUNT}", data=missing_data)
+    json_data = response.json()
+
+    assert json_data["responseCode"] == 400
+    assert f"{missing_field} parameter is missing" in json_data["message"]
+
+
+

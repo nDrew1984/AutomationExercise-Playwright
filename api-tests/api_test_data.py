@@ -31,3 +31,18 @@ UPDATED_ADDRESS1 = ADDRESS1 + " UPDATED"
 UPDATED_ADDRESS2 = ADDRESS2 + " UPDATED"
 UPDATED_CITY = CITY + " UPDATED"
 UPDATED_ZIPCODE = ZIPCODE + " UPDATED"
+
+# Mandatory Account data:
+MANDATORY_DATA = {
+    "name": "TestName",
+    "email": "test@email.com",
+    "password": "pass777",
+    "firstname": "TestFirstName",
+    "lastname": "TestLastName",
+    "address1": "TestAddress1",
+    "country": "TestCountry",
+    "state": "TestState",
+    "city": "TestCity",
+    "zipcode": "ZC 111222",
+    "mobile_number": "+9876543210"
+}
