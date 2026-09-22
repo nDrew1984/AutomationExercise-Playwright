@@ -1,6 +1,6 @@
 import pytest
 import requests
-from api_endpoints import PRODUCTS_LIST, BRANDS_LIST, CREATE_ACCOUNT, DELETE_ACCOUNT, UPDATE_ACCOUNT
+from api_endpoints import PRODUCTS_LIST, BRANDS_LIST, CREATE_ACCOUNT, DELETE_ACCOUNT, UPDATE_ACCOUNT, VERIFY_LOGIN
 from api_test_data import NAME, EMAIL, PASSWORD, TITLE, BIRTH_DAY, BIRTH_MONTH, BIRTH_YEAR, FIRSTNAME, LASTNAME, COMPANY, ADDRESS1, ADDRESS2, COUNTRY, STATE, CITY, ZIPCODE, MOBILE_NUMBER, UPDATED_ADDRESS1, UPDATED_ADDRESS2, UPDATED_CITY, UPDATED_ZIPCODE
 
 @pytest.fixture(scope="session")
@@ -95,3 +95,10 @@ def deleted_account(updated_account, session, base_url):
     assert response.json()["responseCode"] == 200
 
     return {"deleted_email": update_data["email"], "response": response}
+
+@pytest.fixture(scope="module")
+def login_response(created_account, session, base_url):
+    email = created_account["account_data"]["email"]
+    password = created_account["account_data"]["password"]
+
+    return session.post(f"{base_url}{VERIFY_LOGIN}", data={"email": email, "password": password})
